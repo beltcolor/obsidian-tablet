@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>다크모드 계산기 및 메모장</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #000000;
+            margin: 0;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            flex-direction: column;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            align-items: center;
+        }
+
+        .chatgpt-button, .whatsapp-button, .translate-button {
+            font-size: 16px;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            margin-bottom: 8px;
+            width: 210px;
+            box-sizing: border-box;
+            text-decoration: none;
+            height: 42px;
+        }
+        
+
+        .chatgpt-button {
+            background-color: #212121; /* 전 색 #3c2e4b */
+            color: #a89eb0;
+            margin-bottom: 21px;
+        }
+
+        .whatsapp-button {
+            background-color: #212121; /* 전 색 #35433a */
+            color: #a8b8a6;
+            margin-bottom: 45px;
+        }
+
+
+        .chatgpt-button:hover {
+            background-color: #4b3c55;
+        }
+
+        .whatsapp-button:hover {
+            background-color: #4b5a4b;
+        }
+
+
+        .search-button {
+            font-size: 0.1px;
+            border: none;
+            background-color: #21212100;
+            border-radius: 8px;
+            transition: background-color;
+            color: #c9c9c900;
+        }
+
+        #searchQuery {
+            width: 210px;
+            height: 42px;
+            background-color: #212121;
+            color: #b1b1b1;
+            text-align: left;
+            font-size: 14px;
+            padding: 8px;
+            border-radius: 8px;
+            margin-bottom: 0px;
+            box-sizing: border-box;
+            outline: none;
+            white-space: nowrap;
+            overflow: hidden;
+            word-wrap: break-word;
+            border: none;
+
+        }
+
+
+        .search-input {
+            width: 210px;
+            height: 42px;
+            background-color: #212121;
+            color: #b1b1b1;
+            text-align: left;
+            font-size: 14px;
+            padding: 8px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            outline: none;
+            white-space: nowrap;
+            overflow: hidden;
+            word-wrap: break-word;
+            border: none;
+        }
+
+        .calculator, .timer {
+            width: 210px;
+            padding: 0px;
+            border-radius: 8px;
+            background-color: #000000;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+            margin-top: 5px;
+        }
+        
+
+        .screen, .notepad-button {
+            width: 100%;
+            height: 38px;
+            background-color: #212121;
+            color: #b1b1b1;
+            text-align: right;
+            font-size: 18px;
+            padding: 8px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            outline: none;
+            white-space: nowrap;
+            overflow: hidden;
+            word-wrap: break-word;
+            cursor: text;
+            border: none;
+            border-radius: 8px;
+            margin-top: 45px;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            border-radius: 8px;
+        }
+
+        .button {
+            padding: 15px;
+            font-size: 15px;
+            border: none;
+            background-color: #212121;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color;
+            color: #c9c9c9;
+            font-weight: 500; 
+        }
+
+
+        .button:hover {
+            background-color: #444;
+        }
+
+        .button:active {
+            background-color: #555;
+        }
+
+        .button-equal {
+            background-color: #3c2e4b;
+            font-size: 18px;
+        }
+
+        .button-equal:hover {
+            background-color: #4b3c55;
+        }
+
+        .button-backspace {
+            background-color: #502929;
+            font-size: 15px;
+        }
+
+        .button-backspace:hover {
+            background-color: #613232;
+        }
+ 
+
+        .timer-display {
+            font-size: 30px;
+            color: #747474;
+            text-align: center;
+            margin-top: 0px;
+            margin-bottom: 15px;
+            width: 210px;
+            font-weight: 600;
+        }
+
+        .timer-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            width: 210px;
+            border-radius: 8px;
+        }
+
+        .timer-button {
+            background: #212121;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 101px;
+            height: 38px;
+            border-radius: 8px;
+            transition: background-color ;
+    }
+
+        .timer-button:hover {
+            background-color: #444;
+        }
+
+        .timer-button:active {
+            background-color: #555;
+        }
+
+        .timer-button svg {
+            width: 25px;
+            height: 25px;
+            color: #605f5f;
+            transition: fill;
+
+            
+}
+    </style>
+</head>
+<body>
+ 
+
+<div class="container">
+     <!-- 구글 검색창 -->
+     <input type="text" id="searchQuery" placeholder=" Google">
+     <a href="https://www.google.com/search?q=" id="searchLink" target="_blank">
+     <button class="search-button"></button>
+     </a>
+
+    <!-- 구글 번역 검색창 -->
+    <input type="text" class="search-input" id="translateSearch" placeholder=" Translate">
+    <a href="https://translate.google.com/?sl=${sourceLang}&tl=${targetLang}&text=" id="transLink" target="_blank">
+
+
+     <!-- 챗GPT 버튼 -->
+     <a href="https://chat.openai.com/" target="_blank" class="chatgpt-button">ChatGPT</a>
+
+     <!-- 왓츠앱 버튼 -->
+    <a href="https://wa.me/?text=%20" target="_blank" class="whatsapp-button">WhatsApp</a>
+
+    </div>
+
+    <!-- 타이머 영역 -->
+    <div class="timer">
+        <div class="timer-display" id="timerDisplay">00:00:00</div>
+        <div class="timer-buttons">
+            <!-- 재생/일시정지 버튼 -->
+            <button class="timer-button" id="startPauseBtn" onclick="togglePlayPause()">
+                <svg id="playIcon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8 5v14l11-7z" fill="currentColor"/>
+                </svg>
+                <svg id="pauseIcon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none;">
+                    <path d="M6 5h4v14H6zm8 0h4v14h-4z" fill="currentColor"/>
+                </svg>
+            </button>
+
+            <!-- 정지 버튼 -->
+            <button class="timer-button" id="resetBtn" onclick="resetTimer()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M6 6h12v12H6z" fill="currentColor"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- 계산기 영역 -->
+    <div class="calculator">
+        <input type="text" class="screen" id="screen" disabled>
+
+        <div class="buttons">
+            <button class="button" onclick="appendToScreen('(')">(</button>
+            <button class="button" onclick="appendToScreen(')')">)</button>
+            <button class="button button-clear" onclick="clearScreen()">C</button>
+            <button class="button button-backspace" onclick="backspace()">⌫</button>
+
+            <button class="button" onclick="appendToScreen('7')">7</button>
+            <button class="button" onclick="appendToScreen('8')">8</button>
+            <button class="button" onclick="appendToScreen('9')">9</button>
+            <button class="button button-operator" onclick="appendToScreen('/')">÷</button>
+
+            <button class="button" onclick="appendToScreen('4')">4</button>
+            <button class="button" onclick="appendToScreen('5')">5</button>
+            <button class="button" onclick="appendToScreen('6')">6</button>
+            <button class="button button-operator" onclick="appendToScreen('×')">×</button>
+
+            <button class="button" onclick="appendToScreen('1')">1</button>
+            <button class="button" onclick="appendToScreen('2')">2</button>
+            <button class="button" onclick="appendToScreen('3')">3</button>
+            <button class="button button-operator" onclick="appendToScreen('+')">+</button>
+
+            <button class="button" onclick="appendToScreen('00')">00</button>
+            <button class="button" onclick="appendToScreen('0')">0</button>
+            <button class="button" onclick="appendToScreen('.')">.</button>
+            <button class="button button-equal" onclick="calculate()">=</button>
+        </div>
+    </div>
+</div>
+
+<script>
+
+// 구글 검색
+document.getElementById('searchQuery').addEventListener('input', function() {
+    // 입력 필드에 커서가 있을 때만 실행
+    if (document.activeElement === document.getElementById('searchQuery')) {
+        var query = document.getElementById('searchQuery').value;
+        var searchLink = document.getElementById('searchLink');
+        searchLink.href = "https://www.google.com/search?q=" + encodeURIComponent(query);
+    }
+});
+
+// Enter 키 입력 시, 버튼을 클릭한 것처럼 동작하도록 설정
+document.getElementById('searchQuery').addEventListener('keydown', function(event) {
+    // 커서가 searchQuery에 있을 때만 실행
+    if (document.activeElement === document.getElementById('searchQuery') && event.key === 'Enter') {
+        event.preventDefault(); // Enter 키 기본 동작을 막음
+        document.querySelector('.search-button').click(); // 보이지 않는 버튼 클릭
+    }
+});
+
+// 'Search' 버튼 클릭 시, 검색 필드 비우기
+document.querySelector('.search-button').addEventListener('click', function() {
+    // 커서가 searchQuery에 있을 때만 실행
+    if (document.activeElement === document.getElementById('searchQuery')) {
+        document.getElementById('searchQuery').value = ''; // 입력 필드 지우기
+    }
+});
+
+
+
+// 구글 번역 검색
+function googleTranslateSearch() {
+    let searchQuery = document.getElementById('translateSearch').value;
+    
+    // 입력된 텍스트가 영어인지 한국어인지 확인
+    const isKorean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(searchQuery);  // 한국어가 포함되어 있으면 true
+    
+    // 언어 방향 설정 (영어 -> 한국어, 한국어 -> 영어)
+    let sourceLang = isKorean ? 'ko' : 'en';  // 한국어일 때는 'ko', 아니면 'en'
+    let targetLang = isKorean ? 'en' : 'ko';  // 한국어일 때는 'en', 아니면 'ko'
+
+    // 구글 번역 URL 설정
+    let googleTranslateUrl = `https://translate.google.com/?sl=${sourceLang}&tl=${targetLang}&text=` + encodeURIComponent(searchQuery);
+    
+    // 새 탭에서 구글 번역 열기
+    window.open(googleTranslateUrl, '_blank');
+}
+
+// 번역 검색창에서 엔터키를 눌렀을 때 검색 실행
+function openTranslateSearchOnEnter(event) {
+    // 엔터 키가 눌렸을 때만 실행
+    if (event.key === 'Enter') {
+        googleTranslateSearch();  // 번역 검색 실행
+        document.getElementById('translateSearch').value = '';  // 검색 후 입력창 비우기
+        event.preventDefault();  // 엔터 키 기본 동작을 막음
+    }
+}
+
+// 번역 검색창에 엔터키 이벤트 추가
+document.getElementById('translateSearch').addEventListener('keydown', openTranslateSearchOnEnter);
+
+
+    //타이머
+    let isPlaying = false;
+
+    function togglePlayPause() {
+        isPlaying = !isPlaying;
+        
+        document.getElementById("playIcon").style.display = isPlaying ? "none" : "inline";
+        document.getElementById("pauseIcon").style.display = isPlaying ? "inline" : "none";
+    }
+
+    function resetTimer() {
+        isPlaying = false;
+        document.getElementById("playIcon").style.display = "inline";
+    document.getElementById("pauseIcon").style.display = "none";
+}
+
+    function appendToScreen(value) {
+        let screen = document.getElementById('screen');
+        if (screen.value === 'Error' || screen.value === '') {
+            screen.value = value;
+        } else {
+            screen.value += value;
+        }
+    }
+
+    function clearScreen() {
+        document.getElementById('screen').value = '';
+    }
+
+    function backspace() {
+        let screen = document.getElementById('screen');
+        screen.value = screen.value.slice(0, -1);
+    }
+
+    function calculate() {
+    let screen = document.getElementById('screen');
+    try {
+        let result = new Function('return ' + screen.value
+            .replace(/×/g, '*') // 모든 ×를 *로 변환
+            .replace(/÷/g, '/') // 모든 ÷를 /로 변환
+            .replace(/x/g, '*') // x도 *로 변환
+            .replace(/X/g, '*') // X도 *로 변환
+        )();
+        screen.value = result;
+    } catch (e) {
+        screen.value = 'Error';
+    }
+}
+
+// 키보드 이벤트 처리
+document.addEventListener('keydown', function(event) {
+    const key = event.key;
+    const activeElement = document.activeElement;
+
+    // 검색창에 포커스가 있을 경우 계산기 입력 차단
+    if (activeElement.id === 'searchQuery' || activeElement.id === 'translateSearch') {
+        return;
+    }
+
+    // 계산기에서 키보드 입력 처리
+    if ('0123456789'.includes(key) || ['+', '-', '*', '.', '(', ')'].includes(key)) {
+        appendToScreen(key);
+    }
+
+    // "/"를 "÷"로 변환
+    if (key === '/') {
+        appendToScreen('÷');
+    }
+
+    if (key === 'x') {
+        appendToScreen('×');
+    }
+
+    if (key === 'Enter') {
+        calculate();
+    }
+
+    if (key === 'Backspace') {
+        backspace();
+    }
+
+    if (key === 'c' || key === 'C') {
+        clearScreen();
+    }
+});
+
+let timerInterval;
+let timerRunning = false;
+let timerSeconds = 0;
+
+function togglePlayPause() {
+    isPlaying = !isPlaying;
+    
+    // 타이머 실행/일시정지
+    if (isPlaying) {
+        timerInterval = setInterval(updateTimer, 1000);  // 타이머 시작
+        document.getElementById("playIcon").style.display = "none";
+        document.getElementById("pauseIcon").style.display = "inline";
+    } else {
+        clearInterval(timerInterval);  // 타이머 멈춤
+        document.getElementById("playIcon").style.display = "inline";
+        document.getElementById("pauseIcon").style.display = "none";
+    }
+}
+
+function resetTimer() {
+    clearInterval(timerInterval);  // 타이머 멈춤
+    timerSeconds = 0;  // 타이머 초기화
+    document.getElementById("timerDisplay").textContent = "00:00:00";  // 화면 초기화
+    document.getElementById("playIcon").style.display = "inline";
+    document.getElementById("pauseIcon").style.display = "none";
+    isPlaying = false;
+}
+
+function updateTimer() {
+    timerSeconds++;
+    const hours = Math.floor(timerSeconds / 3600);
+    const minutes = Math.floor((timerSeconds % 3600) / 60);
+    const seconds = timerSeconds % 60;
+    document.getElementById("timerDisplay").textContent =
+        pad(hours) + ":" + pad(minutes) + ":" + pad(seconds);
+}
+
+function pad(num) {
+    return num < 10 ? "0" + num : num;
+}
+</script>
+
+</body>
+</html>
